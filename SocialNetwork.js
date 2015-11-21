@@ -117,7 +117,7 @@ function restart() {
 
     g.append('svg:circle')
         .attr('class', 'node')
-        .attr('r', 12)
+        .attr('r', 18)
         .style('fill', function(d){
             return (d === selected_node) ?
                     d3.rgb(colors(d.id)).brighter().toString() : colors(d.id)
@@ -125,7 +125,7 @@ function restart() {
         .on('mouseover', function(d){
             if(!mousedown_node || d === mousedown_node) return;
             // Enlarge target node
-            d3.select(this).attr('transform', 'scale(1.2)');
+            d3.select(this).attr('transform', 'scale(1.5)');
         })
         .on('mouseout', function(d){
             if(!mousedown_node || d === mousedown_node) return;
@@ -139,7 +139,7 @@ function restart() {
             mousedown_node = d;
             if(mousedown_node === selected_node) selected_node = null;
             else selected_node = mousedown_node;
-            selected_node = null;
+            selected_edge = null;
 
             // Reposition drag line
             drag_line.classed('hidden', false)
@@ -215,7 +215,7 @@ function mousemove() {
 
     // Update drag line
     drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 
-                    'L' + d3.mouse(this)[0] + ','+ d3.mouse(this)[1]);
+                    'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
 
     restart();
 }

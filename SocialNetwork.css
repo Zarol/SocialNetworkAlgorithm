@@ -1,5 +1,5 @@
 svg {
-    background-color: #FFF;
+    background-color: #DDD;
     cursor: default;
 }
 
@@ -7,35 +7,36 @@ svg:not(.active):not(.ctrl) {
     cursor: crosshair;
 }
 
-path.link {
+path.edge {
     fill: none;
     stroke: #000;
     stroke-width: 4px;
     cursor: default;
 }
 
-svg:not(.active):not(.ctrl) path.link {
+svg:not(.active):not(.ctrl) path.edge {
     cursor: pointer;
 }
 
-path.link.selected {
+path.edge.selected {
     stroke-dasharray: 10,2;
 }
 
-path.link.dragline {
+path.edge.dragline {
     pointer-events: none;
 }
 
-path.link.hidden {
+path.edge.hidden {
     stroke-width: 0;
 }
 
 circle.node {
     stroke-width: 1.5px;
+    cursor: pointer;
 }
 
 text {
-    font: 12px sans-serif;
+    font: 14px sans-serif;
     pointer-events: none;
 }
 
