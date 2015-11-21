@@ -34,7 +34,7 @@ var force = d3.layout.force()
 
 // Define what line is displayed when dragging edges for new nodes
 var drag_line = svg.append('svg:path')
-    .attr('class', 'link dragline hidden')
+    .attr('class', 'edge dragline hidden')
     .attr('d', 'M0,0L0,0');
 
 // Handles to edge and node element groups
@@ -63,12 +63,10 @@ function tick() {
             dist = Math.sqrt(deltaX * deltaX + deltaY * deltaY),
             normX = deltaX / dist,
             normY = deltaY / dist,
-            sourcePadding = 12,
-            targetPadding = 12,
-            sourceX = d.source.x + (sourcePadding * normX),
-            sourceY = d.source.y + (sourcePadding * normY),
-            targetX = d.target.x - (targetPadding * normX),
-            targetY = d.target.y - (targetPadding * normY);
+            sourceX = d.source.x + normX,
+            sourceY = d.source.y + normY,
+            targetX = d.target.x - normX,
+            targetY = d.target.y - normY;
 
         return 'M' + sourceX + ',' + sourceY + 'L' + targetX + ',' + targetY;
     });
@@ -160,7 +158,7 @@ function restart() {
             // Unenlarge target node
             d3.select(this).attr('transform', '');
 
-            // Add link to graph, update if already added
+            // Add edge to graph, update if already added
             var source = mousedown_node, 
                 target = mouseup_node;
 
@@ -214,8 +212,7 @@ function mousemove() {
     if(!mousedown_node) return;
 
     // Update drag line
-    drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 
-                    'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
+    drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
 
     restart();
 }
@@ -265,7 +262,7 @@ function keydown() {
             } else if(selected_edge) {
                 edges.splice(edges.indexOf(selected_edge), 1);
             }
-            selected_link = null;
+            selected_edge = null;
             selected_node = null;
             restart();
             break;
@@ -285,11 +282,11 @@ function keyup() {
 
 // Script starts here
 svg.on('mousedown', mousedown)
-    .on('mousemove', mousemove)
-    .on('mouseup', mouseup);
+  .on('mousemove', mousemove)
+  .on('mouseup', mouseup);
 
 d3.select(window)
-    .on('keydown', keydown)
-    .on('keyup', keyup);
+  .on('keydown', keydown)
+  .on('keyup', keyup);
 
 restart();

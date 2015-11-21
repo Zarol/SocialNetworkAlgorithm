@@ -1,5 +1,5 @@
 svg {
-    background-color: #DDD;
+    background-color: #FAFAFA;
     cursor: default;
     -webkit-user-select: none;
     -moz-user-select: none;
@@ -36,7 +36,6 @@ path.edge.hidden {
 }
 
 circle.node {
-    stroke-width: 1.5px;
     cursor: pointer;
 }
 
