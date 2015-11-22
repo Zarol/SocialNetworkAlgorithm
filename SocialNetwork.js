@@ -1,13 +1,14 @@
 // Perform SVG setup for D3.js
-var width   = 960,
-    height  = 500,
+var width   = window.innerWidth - 35,
+    height  = window.innerHeight - 25,
     colors  = d3.scale.category10();
 
 var svg = d3.select('body')
     .append('svg')
     .attr('oncontextmenu', 'return false;')
     .attr('width', width)
-    .attr('height', height);
+    .attr('height', height)
+    .style('border', 'solid');
 
 // Set up initial nodes & edges
 var nodes = 
@@ -116,21 +117,21 @@ function restart() {
     g.append('svg:circle')
         .attr('class', 'node')
         .attr('r', 18)
-        .style('fill', function(d){
+        .style('fill', function(d) {
             return (d === selected_node) ?
                     d3.rgb(d.friend).brighter().toString() : d.friend
         })
-        .on('mouseover', function(d){
+        .on('mouseover', function(d) {
             if(!mousedown_node || d === mousedown_node) return;
             // Enlarge target node
             d3.select(this).attr('transform', 'scale(1.5)');
         })
-        .on('mouseout', function(d){
+        .on('mouseout', function(d) {
             if(!mousedown_node || d === mousedown_node) return;
             // Unenlarge target node
             d3.select(this).attr('transform', '');
         })
-        .on('mousedown', function(d){
+        .on('mousedown', function(d) {
             if(d3.event.ctrlKey) return;
 
             // Select node
@@ -146,7 +147,7 @@ function restart() {
 
             restart();
         })
-        .on('mouseup', function(d){
+        .on('mouseup', function(d) {
             if(!mousedown_node) return;
 
             drag_line.classed('hidden', true);
@@ -319,6 +320,18 @@ function keyup() {
         svg.classed('ctrl', false);
     }
 }
+
+function updateWindow() {
+    var x = window.innerWidth - 35;
+    var y = window.innerHeight - 25;
+
+    svg.attr('width', x)
+        .attr('height', y);
+    force.size([x,y]);
+    restart();
+}
+
+window.onresize = updateWindow;
 
 // Script starts here
 svg.on('mousedown', mousedown)
