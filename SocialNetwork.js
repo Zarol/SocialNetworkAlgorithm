@@ -84,8 +84,8 @@ function restart() {
 
     // Update existing edges
     path.classed('selected', function(d) { return d === selected_edge; });
-    path.classed('connected', function(d) { return d.state === 'connected' });
-    path.classed('broken', function(d) { return d.state === 'broken' });
+    path.classed('connected', function(d) { return d.state === 'connected'; });
+    path.classed('broken', function(d) { return d.state === 'broken'; });
 
     // Add new edges
     path.enter().append('svg:path')
@@ -111,7 +111,7 @@ function restart() {
     // Update existing nodes
     circle.selectAll('circle').style('fill', function(d) { 
         return (d === selected_node) ? 
-                d3.rgb(d.friend).brighter().toString() : d.friend });
+                d3.rgb(d.friend).brighter().toString() : d.friend; });
 
     // Add new nodes
     var g = circle.enter().append('svg:g');
@@ -121,7 +121,7 @@ function restart() {
         .attr('r', 18)
         .style('fill', function(d) {
             return (d === selected_node) ?
-                    d3.rgb(d.friend).brighter().toString() : d.friend
+                    d3.rgb(d.friend).brighter().toString() : d.friend;
         })
         .on('mouseover', function(d) {
             if(!mousedown_node || d === mousedown_node) return;
@@ -224,23 +224,23 @@ function updateEdgeColors()
     if(selected_node !== null)
     {
         var compareColor = selected_node.friend;
-        for(var e = 0; e < edges.length; ++e)
+        for(var e1 = 0; e1 < edges.length; ++e1)
         {
-            if(edges[e].source.friend === compareColor &&
-                edges[e].target.friend === compareColor)
-                edges[e].state = "connected";
-            else if(edges[e].source.friend === compareColor ||
-                edges[e].target.friend === compareColor)
-                edges[e].state = "broken";
+            if(edges[e1].source.friend === compareColor &&
+                edges[e1].target.friend === compareColor)
+                edges[e1].state = "connected";
+            else if(edges[e1].source.friend === compareColor ||
+                edges[e1].target.friend === compareColor)
+                edges[e1].state = "broken";
             else
-                edges[e].state = "default";
+                edges[e1].state = "default";
         }
         restart();
     }
     else
     {
-        for(var e = 0; e < edges.length; ++e)
-            edges[e].state = "default";
+        for(var e2 = 0; e2 < edges.length; ++e2)
+            edges[e2].state = "default";
     }
 }
 
