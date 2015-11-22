@@ -147,6 +147,7 @@ function restart() {
                 .attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 
                       'L' + mousedown_node.x + ',' + mousedown_node.y);
 
+            updateEdgeColors();
             restart();
         })
         .on('mouseup', function(d) {
@@ -178,6 +179,8 @@ function restart() {
             // Select new edge
             selected_edge = edge;
             selected_node = null;
+
+            updateEdgeColors();
             restart();
         });
 
@@ -198,22 +201,7 @@ function restart() {
 function mousedown() {
     svg.classed('active', true);
 
-    if(selected_node !== null)
-    {
-        var compareColor = selected_node.friend;
-        for( var e = 0; e < edges.length; ++e )
-        {
-            if(edges[e].source.friend === compareColor &&
-                edges[e].target.friend === compareColor)
-                edges[e].state = "connected";
-            else if(edges[e].source.friend === compareColor ||
-                edges[e].target.friend === compareColor)
-                edges[e].state = "broken";
-            else
-                edges[e].state = "default";
-        }
-        restart();
-    }
+    //updateEdgeColors();
 
     if(d3.event.ctrlKey || mousedown_node || mousedown_edge) return;
 
@@ -226,7 +214,34 @@ function mousedown() {
     nodes.push(node);
     selected_node = node;
 
+    updateEdgeColors();
+
     restart();
+}
+
+function updateEdgeColors()
+{
+    if(selected_node !== null)
+    {
+        var compareColor = selected_node.friend;
+        for(var e = 0; e < edges.length; ++e)
+        {
+            if(edges[e].source.friend === compareColor &&
+                edges[e].target.friend === compareColor)
+                edges[e].state = "connected";
+            else if(edges[e].source.friend === compareColor ||
+                edges[e].target.friend === compareColor)
+                edges[e].state = "broken";
+            else
+                edges[e].state = "default";
+        }
+        restart();
+    }
+    else
+    {
+        for(var e = 0; e < edges.length; ++e)
+            edges[e].state = "default";
+    }
 }
 
 function mousemove() {
