@@ -12,9 +12,9 @@ var svg = d3.select('body')
 // Set up initial nodes & edges
 var nodes = 
     [
-        {id: 0},
-        {id: 1},
-        {id: 2}
+        {id: 0, friend: colors(0)},
+        {id: 1, friend: colors(1)},
+        {id: 2, friend: colors(2)}
     ],
     lastNodeId = 2,
     edges = 
@@ -108,7 +108,7 @@ function restart() {
     // Update existing nodes
     circle.selectAll('circle').style('fill', function(d) { 
         return (d === selected_node) ? 
-                d3.rgb(colors(d.id)).brighter().toString() : colors(d.id) });
+                d3.rgb(d.friend).brighter().toString() : d.friend });
 
     // Add new nodes
     var g = circle.enter().append('svg:g');
@@ -118,7 +118,7 @@ function restart() {
         .attr('r', 18)
         .style('fill', function(d){
             return (d === selected_node) ?
-                    d3.rgb(colors(d.id)).brighter().toString() : colors(d.id)
+                    d3.rgb(d.friend).brighter().toString() : d.friend
         })
         .on('mouseover', function(d){
             if(!mousedown_node || d === mousedown_node) return;
@@ -199,11 +199,12 @@ function mousedown() {
 
     // Insert new node at clicked point
     var point = d3.mouse(this),
-        node = {id: ++lastNodeId};
+        node = {id: ++lastNodeId, friend: colors(lastNodeId)};
 
     node.x = point[0];
     node.y = point[1];
     nodes.push(node);
+    selected_node = node;
 
     restart();
 }
@@ -267,6 +268,45 @@ function keydown() {
             restart();
             break;
     }
+    if(!selected_node) return;
+    var newFriend = null;
+    switch(d3.event.keyCode) {
+        case 48: // 0
+            newFriend = colors(0);
+            break;
+        case 49: // 1
+            newFriend = colors(1);
+            break;
+        case 50: // 2
+            newFriend = colors(2);
+            break;
+        case 51: // 3
+            newFriend = colors(3);
+            break;
+        case 52: // 4
+            newFriend = colors(4);
+            break;
+        case 53: // 5
+            newFriend = colors(5);
+            break;
+        case 54: // 6
+            newFriend = colors(6);
+            break;
+        case 55: // 7
+            newFriend = colors(7);
+            break;
+        case 56: // 8
+            newFriend = colors(8);
+            break;
+        case 57: // 9
+            newFriend = colors(9);
+            break;
+    }
+
+    circle.selectAll('circle').style('fill', function(d) {
+        if(d === selected_node && newFriend !== null)
+            d.friend = newFriend;
+        return d.friend; });
 }
 
 function keyup() {
