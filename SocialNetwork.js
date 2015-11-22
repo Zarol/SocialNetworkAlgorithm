@@ -20,8 +20,8 @@ var nodes =
     lastNodeId = 2,
     edges = 
     [
-        {source: nodes[0], target: nodes[1]},
-        {source: nodes[1], target: nodes[2]}
+        {source: nodes[0], target: nodes[1], state: 'default'},
+        {source: nodes[1], target: nodes[2], state: 'default'}
     ];
 
 // Initialize D3 force layout
@@ -84,6 +84,8 @@ function restart() {
 
     // Update existing edges
     path.classed('selected', function(d) { return d === selected_edge; });
+    path.classed('connected', function(d) { return d.state === 'connected' });
+    path.classed('broken', function(d) { return d.state === 'broken' });
 
     // Add new edges
     path.enter().append('svg:path')
@@ -195,6 +197,23 @@ function restart() {
 
 function mousedown() {
     svg.classed('active', true);
+
+    if(selected_node !== null)
+    {
+        var compareColor = selected_node.friend;
+        for( var e = 0; e < edges.length; ++e )
+        {
+            if(edges[e].source.friend === compareColor &&
+                edges[e].target.friend === compareColor)
+                edges[e].state = "connected";
+            else if(edges[e].source.friend === compareColor ||
+                edges[e].target.friend === compareColor)
+                edges[e].state = "broken";
+            else
+                edges[e].state = "default";
+        }
+        restart();
+    }
 
     if(d3.event.ctrlKey || mousedown_node || mousedown_edge) return;
 

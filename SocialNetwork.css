@@ -27,6 +27,14 @@ path.edge.selected {
     stroke-dasharray: 10,2;
 }
 
+path.edge.connected {
+    stroke: #32CD32;
+}
+
+path.edge.broken {
+    stroke: #DD0048;
+}
+
 path.edge.dragline {
     pointer-events: none;
 }
