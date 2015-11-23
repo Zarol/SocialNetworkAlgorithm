@@ -1,8 +1,9 @@
-// Perform SVG setup for D3.js
+// Define the SVG canvas and initailize the node colors
 var width   = window.innerWidth - 35,
     height  = window.innerHeight - 25,
     colors  = d3.scale.category10();
 
+// Create the SVG canvas
 var svg = d3.select('body')
     .append('svg')
     .attr('oncontextmenu', 'return false;')
@@ -11,6 +12,10 @@ var svg = d3.select('body')
     .style('border', 'solid');
 
 // Set up initial nodes & edges
+// - Nodes use a unique ID to make them distinct, and a color to represents
+//      their group of friends
+// - Edges have a source and a target to connect to, and a state which represent
+//      the color to take on (green / red)
 var nodes = 
     [
         {id: 0, friend: colors(0)},
@@ -25,12 +30,13 @@ var nodes =
     ];
 
 // Initialize D3 force layout
+//      The force layout makes the graphs physics-based and more interactive
 var force = d3.layout.force()
     .nodes(nodes)
     .links(edges)
     .size([width, height])
-    .linkDistance(150)
-    .charge(-500)
+    .linkDistance(150)  // What length to bind each node to
+    .charge(-500)   // How strongly to bind the nodes
     .on('tick', tick);
 
 // Define what line is displayed when dragging edges for new nodes
@@ -42,13 +48,14 @@ var drag_line = svg.append('svg:path')
 var path = svg.append('svg:g').selectAll('path'),
     circle = svg.append('svg:g').selectAll('g');
 
-// Mouse Event Handlers
+// Mouse Event Handlers, used for user interaction
 var selected_node = null,
     selected_edge = null,
     mousedown_node = null,
     mousedown_edge = null,
     mouseup_node = null;
 
+// Resets mouse events, used for user interaction
 function resetMouseVars() {
     mousedown_node = null;
     mouseup_node = null;
@@ -57,7 +64,7 @@ function resetMouseVars() {
 
 // Update Force Layout on every tick
 function tick() {
-    // Draw edges with proper padding from node centers
+    // Draw edges from source nodes to target nodes
     path.attr('d', function(d) {
         var deltaX = d.target.x - d.source.x,
             deltaY = d.target.y - d.source.y,
@@ -82,7 +89,7 @@ function restart() {
     // Edge group
     path = path.data(edges);
 
-    // Update existing edges
+    // Change the colors of the edges to the appropriate values
     path.classed('selected', function(d) { return d === selected_edge; });
     path.classed('connected', function(d) { return d.state === 'connected'; });
     path.classed('broken', function(d) { return d.state === 'broken'; });
@@ -94,7 +101,7 @@ function restart() {
         .on('mousedown', function(d) {
             if(d3.event.ctrlKey) return;
 
-            // Select Edge
+            // Set the selected edge so it may be dashed
             mousedown_edge = d;
             if(mousedown_edge === selected_edge) selected_edge = null;
             else selected_edge = mousedown_edge;
@@ -102,13 +109,13 @@ function restart() {
             restart();
         });
 
-    // Remove old edges
+    // Remove unused edges
     path.exit().remove();
 
     // Node group
     circle = circle.data(nodes, function(d) { return d.id; });
 
-    // Update existing nodes
+    // Highlight the node that is being selected
     circle.selectAll('circle').style('fill', function(d) { 
         return (d === selected_node) ? 
                 d3.rgb(d.friend).brighter().toString() : d.friend; });
@@ -119,20 +126,24 @@ function restart() {
     g.append('svg:circle')
         .attr('class', 'node')
         .attr('r', 18)
+        // Sets the color brighter if iti s selected
         .style('fill', function(d) {
             return (d === selected_node) ?
                     d3.rgb(d.friend).brighter().toString() : d.friend;
         })
+        // Enlarge the node if an edge is being dragged to it
         .on('mouseover', function(d) {
             if(!mousedown_node || d === mousedown_node) return;
             // Enlarge target node
             d3.select(this).attr('transform', 'scale(1.5)');
         })
+        // Unenlarge the node if the edge moves away from it
         .on('mouseout', function(d) {
             if(!mousedown_node || d === mousedown_node) return;
             // Unenlarge target node
             d3.select(this).attr('transform', '');
         })
+        // Select the node or update the edge being drawn
         .on('mousedown', function(d) {
             if(d3.event.ctrlKey) return;
 
@@ -150,6 +161,7 @@ function restart() {
             updateEdgeColors();
             restart();
         })
+        // Update the edge if it is valid
         .on('mouseup', function(d) {
             if(!mousedown_node) return;
 
@@ -198,10 +210,9 @@ function restart() {
     force.start();
 }
 
+// Creates a node on the SVG canvas
 function mousedown() {
     svg.classed('active', true);
-
-    //updateEdgeColors();
 
     if(d3.event.ctrlKey || mousedown_node || mousedown_edge) return;
 
@@ -219,19 +230,24 @@ function mousedown() {
     restart();
 }
 
+// Iterates through all the edges and update the valid paths
 function updateEdgeColors()
 {
     if(selected_node !== null)
     {
+        // Check which edges to highlight based on the selected node color
         var compareColor = selected_node.friend;
         for(var e1 = 0; e1 < edges.length; ++e1)
         {
+            // If both nodes on an edge are the same color, green
             if(edges[e1].source.friend === compareColor &&
                 edges[e1].target.friend === compareColor)
                 edges[e1].state = "connected";
+            // If only one node on an edge is the correct color, red
             else if(edges[e1].source.friend === compareColor ||
                 edges[e1].target.friend === compareColor)
                 edges[e1].state = "broken";
+            // Keep it black otherwise
             else
                 edges[e1].state = "default";
         }
@@ -239,20 +255,24 @@ function updateEdgeColors()
     }
     else
     {
+        // There is no selected node, so reset all the edges to black
         for(var e2 = 0; e2 < edges.length; ++e2)
             edges[e2].state = "default";
     }
 }
 
+// Move the drag line under the mouse if it is dragging
 function mousemove() {
     if(!mousedown_node) return;
 
     // Update drag line
-    drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
+    drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y 
+        + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
 
     restart();
 }
 
+// Update the drag line
 function mouseup() {
     if(mousedown_node) {
         // Hide the drag line
@@ -264,6 +284,7 @@ function mouseup() {
     resetMouseVars();
 }
 
+// Helper function to delete edges from the graph
 function spliceEdgesForNode(node) {
     var toSplice = edges.filter(function(l) {
         return (l.source === node || l.target === node);
@@ -276,19 +297,22 @@ function spliceEdgesForNode(node) {
 // Only respond to 1 keydown
 var lastKeyDown = -1;
 
+// Keyboard controls for the simulation
 function keydown() {
     d3.event.preventDefault();
 
     if(lastKeyDown !== -1) return;
     lastKeyDown = d3.event.keyCode;
 
-    // CTRL
+    // CTRL - allows you to drag a node
     if(d3.event.keyCode === 17) {
         circle.call(force.drag);
         svg.classed('ctrl', true);
     }
 
     if(!selected_node && !selected_edge) return;
+    
+    // Delete & Backspace allow you to delete nodes / edges upon selection
     switch(d3.event.keyCode) {
         case 8: // Backspace
         case 46: // Delete
@@ -304,6 +328,8 @@ function keydown() {
             break;
     }
     if(!selected_node) return;
+
+    // Keys 0 - 9 set the friend group / color of a selected node
     var newFriend = null;
     switch(d3.event.keyCode) {
         case 48: // 0
@@ -344,6 +370,7 @@ function keydown() {
         return d.friend; });
 }
 
+// Allow another key to be pressed
 function keyup() {
     lastKeyDown = -1;
 
@@ -355,6 +382,7 @@ function keyup() {
     }
 }
 
+// Resizes the SVG canvas when the window resizes
 function updateWindow() {
     var x = window.innerWidth - 35;
     var y = window.innerHeight - 25;
@@ -365,6 +393,7 @@ function updateWindow() {
     restart();
 }
 
+// Resizes the SVG canvas when the window resizes
 window.onresize = updateWindow;
 
 // Script starts here

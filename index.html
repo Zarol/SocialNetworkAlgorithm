@@ -9,17 +9,82 @@
     <body>
     <h1>Social Network Algorithm</h1>
     <h2>Saharath Kleips</h2>
-    <h3>Instructions</h3>
-    Click on the canvas to <b>create a node</b>.</br>
-    Click+Drag from one node to another node to <b>create an edge</b>.</br>
-    Ctrl+Click+Drag a node to <b>move a node</b> around the canvas.</br>
+    <h3>Description</h3>
+    This project seeks to be used as a visual aid and simulation on the implementation of a "Social Network" routing protocol. A social network routing protocol establishes the concepts of "friends" when transmitting data between large distances. Suppose you are a client, "A," and you wish to send data to client "B." If there is a direct connection between A and B, then there is little worry about your data being intercepted or sniffed; your privacy is maintained. Now assume two more clients, C and D, both equidistant away from A and B. C has been known to read any data it receives, however, D is very trusted. In this scenario, you would prefer to transmit data through D to B (A->D->B) over C (A->C->B). This concept spawns the idea of a Social Network, in which routers / clients / etc. maintain a friends list (a list of trusted peers). A central server would be able to maintain a list of all clients and respond with the most optimal path determined by each client's friends list. The motivation here is privacy, rather than efficiency, such that if D in the last example was further from A and B than C, A would still chooose to transmit through D. </br></br>
+    The simulation I have developed maintains a high-level view of how a central server could determine paths between friends. More information may be found in the report. 
 
-    Click a node or edge <b>to select</b> the item.</br>
-    Selecting a node will <b>highlight</b> all available paths a node may transmit to in green, and all blocked paths in red. Any edge connected by two of the same color may be available.</br>
-    Pressing Delete or Backspace on a selected node or edge will <b>remove</b> the item.</br>
-    Pressing 0-9 on a selected node will change the <b>friend group</b> the selected node belongs to.</br></br>
+    <h3>Instructions</h3>
+    <table>
+        <tbody>
+            <tr>
+                <th>Action</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>Click (on canvas)</td>
+                <td>Create a node at the pointer location.</td>
+            </tr>
+            <tr>
+                <td>Click (on node / edge)</td>
+                <td>Selects the node / edge. Displays the available paths for that node's friend group. Green is valid. Red is blocked.</td>
+            </tr>
+            <tr>
+                <td>Click + Drag (on node)</td>
+                <td>Creates an edge, release on another node to establish a link.</td>
+            </tr>
+            <tr>
+                <td>Click + Ctrl + Drag (on node)</td>
+                <td>Moves the node around the canvas.</td>
+            </tr>
+            <tr>
+                <td>Delete / Backspace (on Select)</td>
+                <td>Removes the selected item from the graph.</td>
+            </tr>
+            <tr>
+                <td>0 (on Select)</td>
+                <td>Sets the node's friend group to Blue.</td>
+            </tr>
+            <tr>
+                <td>1 (on Select)</td>
+                <td>Sets the node's friend group to Orange.</td>
+            </tr>
+            <tr>
+                <td>2 (on Select)</td>
+                <td>Sets the node's friend group to Green.</td>
+            </tr>
+            <tr>
+                <td>3 (on Select)</td>
+                <td>Sets the node's friend group to Red.</td>
+            </tr>
+            <tr>
+                <td>4 (on Select)</td>
+                <td>Sets the node's friend group to Purple.</td>
+            </tr>
+            <tr>
+                <td>5 (on Select)</td>
+                <td>Sets the node's friend group to Brown.</td>
+            </tr>
+            <tr>
+                <td>6 (on Select)</td>
+                <td>Sets the node's friend group to Pink.</td>
+            </tr>
+            <tr>
+                <td>7 (on Select)</td>
+                <td>Sets the node's friend group to Gray.</td>
+            </tr>
+            <tr>
+                <td>8 (on Select)</td>
+                <td>Sets the node's friend group to Yellow.</td>
+            </tr>
+            <tr>
+                <td>9 (on Select)</td>
+                <td>Sets the node's friend group to Cyan.</td>
+            </tr>
+        </tbody>
+    </table>
     </body>
 
+    <!-- D3.js is used for a much of the graph responsiveness, the framework can be found at d3js.org -->
     <script src="https://d3js.org/d3.v3.min.js"></script>
     <script src="SocialNetwork.js"></script>
 </html>
