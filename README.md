@@ -9,5 +9,5 @@ This project seeks to be used as a visual aid and simulation on the implementati
 The simulation I have developed maintains a high-level view of how a central server could determine paths between friends. More information may be found in the report. 
 
 ## Contact Information
-**LinkedIn:** http://www.linkedin.com/in/SaharathKleips
+**LinkedIn:** http://www.linkedin.com/in/SaharathKleips  
 **Email:** SaharathKleips@gmail.com
