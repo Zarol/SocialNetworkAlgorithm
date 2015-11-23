@@ -1,5 +1,5 @@
 # SocialNetworkAlgorithm (Saharath Kleips)
-Simulation project for CPE 400. [D3js](d3js.org) was used to create the graph.  
+Simulation project for CPE 400. [D3js](https://d3js.org) was used to create the graph.  
 
 ![](.screenshot.png "Screenshot")
 Visit https://zarol.github.io/SocialNetworkAlgorithm/ for a live demo.  
